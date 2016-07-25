@@ -145,56 +145,13 @@ function initMap() {
         center: seattle,
         zoom: 13,
         streetViewControl: false,
-        mapTypeControlOptions: {
-            position: google.maps.ControlPosition.TOP_RIGHT
-        }
+        mapTypeControl: false
     });
     infowindow = new google.maps.InfoWindow();
     bounds = new google.maps.LatLngBounds();
 
-    // Hide location list if hide list button is clicked
-    $("#list-btn").click(function() {
-        toggleList();
-    });
-
     // Apply Knockout Bindings to viewModel
     ko.applyBindings(new viewModel());
-}
-
-function removeMarkers() {
-    // Clear locations from list
-    $(".list-view").empty();
-
-    // Clear markers on map
-    for (var i = 0; i < placeMarkers.length; i++) {
-        placeMarkers[i].setMap(null);
-    }
-    placeMarkers = [];
-}
-
-function clickedLocations(currentClicked) {
-    // Set both day time location & night time location buttons back to default color
-    $('.location-btn').css({ 'background-color': ' #4885F5' });
-
-    // Set currently clicked button to darker color to indicate current locations
-    $(currentClicked).css({
-        "background-color": "#3F5F97",
-    });
-}
-
-
-// Toggles List to hide or show list
-function toggleList() {
-    if ($("#list-btn").val() === 'Hide List') {
-        $('.side-bar').animate({
-            height: "175px",
-        }, 150);
-    } else {
-        $('.side-bar').animate({
-            height: "95%"
-        }, 150);
-    }
-    $("#list-btn").val($("#list-btn").val() === 'Hide List' ? 'Show List' : 'Hide List');
 }
 
 // Create Knockout Model data from the parameters given
@@ -218,14 +175,14 @@ function viewModel() {
         // Empty objects from self.locations array
         self.locations([]);
 
+        // Indicate currently clicked location button
+        buttonColor(this);
+
         // Remove previous markers and locations from list
         removeMarkers();
 
-        // Indicate currently clicked location button
-        clickedLocations(this);
-
         // Display locations if Day Time/Night Time Locations button is clicked
-        if ($(this).val() === "Night Time Locations") {
+        if ($(this).val() === 'Night Time Locations') {
 
             // Pass night style theme in as argument along with night locations
             locationsDayNight(nightLocations, nightStyle);
@@ -240,6 +197,11 @@ function viewModel() {
 
     // Default locations
     locationsDayNight(dayLocations);
+
+    // Hide location list if hide list button is clicked
+    $('#list-btn').click(function() {
+        toggleList();
+    });
 
     // Display markers on map and push objects to self.locations array
     function locationsDayNight(locations, style) {
@@ -279,7 +241,7 @@ function viewModel() {
     }
 
     // Obtain value from filter box
-    self.filter = ko.observable("");
+    self.filter = ko.observable('');
 
     // Display filtered results dynamically to list
     self.filteredLocations = ko.computed(function() {
@@ -326,6 +288,42 @@ function viewModel() {
     };
 }
 
+// Darken location button clicked
+function buttonColor(currentClicked) {
+    // Set both day time location & night time location buttons back to default color
+    $('.location-btn').css({ 'background-color': ' #4885F5' });
+
+    // Set currently clicked button to darker color to indicate current locations
+    $(currentClicked).css({
+        'background-color': '#3F5F97',
+    });
+}
+
+function removeMarkers() {
+    // Clear locations from list
+    $('.list-view').empty();
+
+    // Clear markers on map
+    for (var i = 0; i < placeMarkers.length; i++) {
+        placeMarkers[i].setMap(null);
+    }
+    placeMarkers = [];
+}
+
+// Toggles List to hide or show list
+function toggleList() {
+    if ($('#list-btn').val() === 'Hide List') {
+        $('.side-bar').animate({
+            height: '175px',
+        }, 150);
+    } else {
+        $('.side-bar').animate({
+            height: '94%'
+        }, 150);
+    }
+    $('#list-btn').val($('#list-btn').val() === 'Hide List' ? 'Show List' : 'Hide List');
+}
+
 // Set marker animation off
 function markerInfoWindow(marker, infowindow) {
 
@@ -340,11 +338,7 @@ function markerInfoWindow(marker, infowindow) {
     });
 
     // If same marker is clicked again, then close it, otherwise obtain infowindow information and display it
-    if (marker === infowindow.anchor) {
-        infowindow.close();
-    } else {
-        locationDetails(marker, infowindow);
-    }
+    marker === infowindow.anchor ? infowindow.close() : locationDetails(marker, infowindow);
 }
 
 
@@ -356,9 +350,9 @@ function locationDetails(marker, infowindow) {
     marker.setAnimation(google.maps.Animation.BOUNCE);
     // Obtain location details with Foursquare's API using Jquery's ajax method and display them in the infowindow
     $.ajax({
-        url: 'https://api.foursquare.com/v2/venues/' + venueId + '?client_id=' + client_ID + "&client_secret=" + client_SECRET + "&v=20160720",
+        url: 'https://api.foursquare.com/v2/venues/' + venueId + '?client_id=' + client_ID + '&client_secret=' + client_SECRET + '&v=20160720',
         success: function(data) {
-            var locationPhoto = data.response.venue.photos.groups[0].items[0].prefix + "250x160" + data.response.venue.photos.groups[0].items[1].suffix;
+            var locationPhoto = data.response.venue.photos.groups[0].items[0].prefix + '250x160' + data.response.venue.photos.groups[0].items[1].suffix;
             var locationName = marker.title;
             var locationAddress = data.response.venue.location.formattedAddress;
             var locationPhoneNumber = data.response.venue.contact.formattedPhone;
@@ -372,34 +366,35 @@ function locationDetails(marker, infowindow) {
             }
 
             if (locationAddress) {
-                infowWindowContent += "<br>" + locationAddress[0] + "<br>" + locationAddress[1];
+                infowWindowContent += '<br>' + locationAddress[0] + '<br>' + locationAddress[1];
             }
 
             if (locationPhoneNumber) {
-                infowWindowContent += "<br>" + locationPhoneNumber;
+                infowWindowContent += '<br>' + locationPhoneNumber;
             }
 
             if (locationHours) {
-                infowWindowContent += "<br>" + locationHours.status;
+                infowWindowContent += '<br>' + locationHours.status;
             }
 
             if (locationRating) {
-                infowWindowContent += "<br><br>" + "Rating: " + locationRating;
+                infowWindowContent += '<br><br>' + 'Rating: ' + locationRating;
             }
 
             if (locationHereNow) {
                 infowWindowContent += "<br>" + locationHereNow;
             }
 
-            infowWindowContent += '</div>';
+            infowWindowContent += '<br><br><i>Data Source: <a href="https://foursquare.com/">Foursquare</a></i></div>';
             infowindow.setContent(infowWindowContent);
 
             // After creating infowindow content, open it.
             infowindow.open(map, marker);
         },
-        // Error handling
+
+        // Error handling for foursquare API
         error: function() {
-            alert("Error, unable to obtain location details. Please try again.");
+            alert("Sorry, unable to obtain location details. Please refresh the page and try again.");
         }
     });
 }

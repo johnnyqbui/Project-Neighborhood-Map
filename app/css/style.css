@@ -15,14 +15,12 @@ body,
 
 .side-bar {
     position: fixed;
-    height: 95%;
+    height: 94%;
     width: 345px;
     margin: 5px 5px;
     z-index: 1;
     background: rgba(51, 51, 51, 0.90);
     text-align: center;
-    overflow-y: hidden;
-    overflow-x: hidden;
 }
 
 #list-btn {
@@ -78,7 +76,7 @@ body,
 }
 
 /*Responsive Elements*/
-
+/* Tablet & Phone */
 @media screen and (max-width: 450px) {
     .side-bar {
         width: 97%;
@@ -86,12 +84,17 @@ body,
     .location-btn {
         margin: 0 5px 15px 5px;
     }
-    .overflow {
-        overflow-y: auto;
+}
+
+/*Scroll visibility*/
+@media screen and (min-height: 731px) {
+    .side-bar {
+        overflow-y: hidden;
+        overflow-x: hidden;
     }
 }
 
-@media screen and (max-height: 700px) {
+@media screen and (max-height: 730px) {
     .side-bar {
         overflow-y: auto;
     }
