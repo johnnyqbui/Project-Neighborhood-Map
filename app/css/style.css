@@ -36,8 +36,10 @@ body,
     z-index: 1;
 }
 
-#search-box:focus {
-    outline-width: 0;
+.title {
+    color: #fff;
+    font-size: 22px;
+    font-family: arial, sans-serif;
 }
 
 .location-btn {
@@ -47,6 +49,20 @@ body,
     color: #fff;
     border: none;
     cursor: pointer;
+}
+
+#filter-box {
+    width: 240px;
+    padding: 12px 43px;
+    border: none;
+}
+
+#filter-box:focus {
+    outline-width: 0;
+}
+
+.list-view {
+    margin-top: 20px;
 }
 
 .location-name {
@@ -60,27 +76,6 @@ body,
 .location-name:hover {
     background: rgba(51, 51, 51, 0.50);
 }
-
-.title {
-    color: #fff;
-    font-size: 22px;
-    font-family: arial, sans-serif;
-}
-
-.list-view {
-    margin-top: 20px;
-}
-
-#filter-box {
-    width: 240px;
-    padding: 12px 43px;
-    border: none;
-}
-
-#filter-box:focus {
-    outline-width: 0;
-}
-
 
 /*Responsive Elements*/
 

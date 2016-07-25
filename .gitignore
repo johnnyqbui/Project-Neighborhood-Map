@@ -2,12 +2,12 @@
 
 node_modules
 
-bower_components/jquery/*
-!bower_components/jquery/dist/
-bower_components/jquery/dist/*
-!bower_components/jquery/dist/jquery.min.js
+app/bower_components/jquery/*
+!app/bower_components/jquery/dist/
+app/bower_components/jquery/dist/*
+!app/bower_components/jquery/dist/jquery.min.js
 
-bower_components/knockout/*
-!bower_components/knockout/dist/
-bower_components/knockout/dist/*
-!bower_components/knockout/dist/knockout.js
+app/bower_components/knockout/*
+!app/bower_components/knockout/dist/
+app/bower_components/knockout/dist/*
+!app/bower_components/knockout/dist/knockout.js

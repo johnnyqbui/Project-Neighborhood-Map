@@ -3,7 +3,8 @@ var gulp = require('gulp'),
     htmlmin = require('gulp-htmlmin'),
     uglifycss = require('gulp-uglifycss'),
     uglify = require('gulp-uglify'),
-    htmlreplace = require('gulp-html-replace');
+    htmlreplace = require('gulp-html-replace'),
+    ghPages = require('gulp-gh-pages');
 
 // Minify CSS file
 gulp.task('styles', function() {
@@ -38,6 +39,18 @@ gulp.task('minify-html', ['replace'], function() {
 		.pipe(gulp.dest('dist'));
 });
 
+// Move neccesary bower component files to distribution folder
+gulp.task('vendor-scripts', function() {
+	gulp.src([
+		'app/bower_components/jquery/dist/jquery.min.js',
+		])
+	.pipe(gulp.dest('dist/bower_components/jquery/dist/'));
+		gulp.src([
+		'app/bower_components/knockout/dist/knockout.js'
+		])
+	.pipe(gulp.dest('dist/bower_components/knockout/dist/'));
+});
+
 // If any changes are made then run the specified gulp tasks
 gulp.task('watch', function() {
     gulp.watch('app/css/*.css', ['styles']);
@@ -46,4 +59,4 @@ gulp.task('watch', function() {
 });
 
 // Run these tasks by default
-gulp.task('default', ['styles', 'scripts', 'replace', 'minify-html', 'watch']);
+gulp.task('default', ['styles', 'scripts', 'replace', 'minify-html', 'vendor-scripts', 'watch']);
