@@ -3,8 +3,7 @@ var gulp = require('gulp'),
     htmlmin = require('gulp-htmlmin'),
     uglifycss = require('gulp-uglifycss'),
     uglify = require('gulp-uglify'),
-    htmlreplace = require('gulp-html-replace'),
-    ghPages = require('gulp-gh-pages');
+    htmlreplace = require('gulp-html-replace');
 
 // Minify CSS file
 gulp.task('styles', function() {
