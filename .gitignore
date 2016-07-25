@@ -1,0 +1,13 @@
+!.gitignore
+
+node_modules
+
+bower_components/jquery/*
+!bower_components/jquery/dist/
+bower_components/jquery/dist/*
+!bower_components/jquery/dist/jquery.min.js
+
+bower_components/knockout/*
+!bower_components/knockout/dist/
+bower_components/knockout/dist/*
+!bower_components/knockout/dist/knockout.js

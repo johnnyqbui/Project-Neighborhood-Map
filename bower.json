@@ -1,0 +1,21 @@
+{
+  "name": "project-neighborhood-map",
+  "description": "",
+  "main": "index.html",
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.0",
+    "knockout": "^3.4.0"
+  },
+  "authors": [
+    "github.com/johnnyqbui"
+  ]
+}

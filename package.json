@@ -1,0 +1,28 @@
+{
+  "name": "project-neighborhood-map",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnnyqbui/Project-Neighborhood-Map.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnnyqbui/Project-Neighborhood-Map/issues"
+  },
+  "homepage": "https://github.com/johnnyqbui/Project-Neighborhood-Map#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-html-replace": "^1.6.1",
+    "gulp-htmlmin": "^2.0.0",
+    "gulp-uglify": "^1.5.4"
+  },
+  "dependencies": {
+    "gulp-uglifycss": "^1.0.6"
+  }
+}
