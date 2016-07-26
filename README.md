@@ -5,6 +5,7 @@ This project's goal is to utilize the organizational JS library [Knockout](http:
 I've also utilized the following:
 *   Package Manager: [Bower](https://bower.io/)
 *   Build tool: [Gulp](http://gulpjs.com/)
+
 ## How to Run Project:
 *   Click on link at the top or click this [link](https://johnnyqbui.github.io/Project-Neighborhood-Map/).
 
@@ -21,14 +22,6 @@ I've also utilized the following:
 
     **And that's it!**
 
-#### Development
-The development code can be found in the '/app' directory along with the raw/uncompressed files. Bower.JSON lists the dependencies and versions used in this project:
-* Jquery: "3.1.0"
-* Knockout: "3.4.0"
-
-#### Production
-The production code can be found in the '/dist' folder along with the minified/compressed files.
-
 ### Setting up Dev Environment:
 * Install Gulp Dependencies:
     * Make sure [Node.JS](https://nodejs.org/en/) is installed
@@ -44,6 +37,14 @@ The production code can be found in the '/dist' folder along with the minified/c
 * [gulp-htmlmin](https://www.npmjs.com/package/gulp-htmlmin)
 * [gulp-uglifycss](https://www.npmjs.com/package/gulp-uglifycss)
 * [gulp-uglify](https://www.npmjs.com/package/gulp-uglify)
+
+### Development
+The development code can be found in the '/app' directory along with the raw/uncompressed files. Bower.JSON lists the dependencies and versions used in this project:
+* Jquery: "3.1.0"
+* Knockout: "3.4.0"
+
+### Production
+The production code can be found in the '/dist' folder along with the minified/compressed files.
 
 ## Run project with most up-to-date version of JQuery and Knockout.JS:
 
