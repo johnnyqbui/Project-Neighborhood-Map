@@ -13,11 +13,18 @@
 </head>
 
 <body>
-    <div class="side-bar">
-        <input type="button" value="Hide List" id="list-btn" class="center">
+    <!-- KO css binding to animate sidebar-->
+    <div class="side-bar" data-bind="css: animate">
+        <!-- List Button click bindings -->
+        <input type="button" id="list-btn" class="center" data-bind="click: function() {toggleList()}, value: showList() ? 'Hide List' : 'Show List'">
+
         <p class="title">Suggested Locations in Seattle</p>
-        <input type="button" value="Day Time Locations" class="location-btn"></input>
-        <input type="button" value="Night Time Locations" class="location-btn"></input>
+
+        <!-- Day Button click and style bindings -->
+        <input type="button" value="Day Time Locations" class="location-btn" data-bind="click: function() {dayVsNight('day')}, style: { background: darkenDayBtn() ? '#3F5F97':'#4885F5'} ">
+
+        <!-- Night Button click and style bindings -->
+        <input type="button" value="Night Time Locations" class="location-btn" data-bind="click: function() {dayVsNight('night')}, style: { background: darkenDayBtn() ? '#4885F5' : '#3F5F97'} ">
 
         <!-- Updates data dynamically after typing-->
         <input id="filter-box" class="center" type="text" value="" placeholder="Filter results" data-bind="value: filter, valueUpdate: 'keyup'">
@@ -42,7 +49,7 @@
     <!-- endbuild -->
 
     <!-- Google Maps Script Tag -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6pDoY8XZemoLgUw1b1up9FRyiAAzFHvA&libraries=places&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6pDoY8XZemoLgUw1b1up9FRyiAAzFHvA&libraries=places&callback=initMap" onerror="googleError()" async defer ></script>
 </body>
 
 </html>

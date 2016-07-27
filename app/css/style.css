@@ -34,6 +34,16 @@ body,
     z-index: 1;
 }
 
+.show-list {
+    height: 175px;
+    transition: height .2s;
+}
+
+.hide-list {
+    height: 94%;
+    transition: height .2s;
+}
+
 .title {
     color: #fff;
     font-size: 22px;
@@ -79,7 +89,7 @@ body,
 /* Tablet & Phone */
 @media screen and (max-width: 450px) {
     .side-bar {
-        width: 97%;
+        width: 97.5%;
     }
     .location-btn {
         margin: 0 5px 15px 5px;

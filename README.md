@@ -56,8 +56,8 @@ The production code can be found in the '/dist' folder along with the minified/c
 	```
 2. Update Dependencies:
 
-    Navigate to the 'app' directory where the bower.json file resides and run in your git command window:
+    Navigate to the '/app' directory where the bower.json file resides and run this in your git command window:
 	```sh
 	$ bower install --force
 	```
-	This command forces updates into bower_components directory. Otherwise, you can keep the original version dependencies the project was created with.
+	This command forces bower to install up to date dependencies into bower_components directory. Otherwise, you can keep the original version dependencies the project was created with.

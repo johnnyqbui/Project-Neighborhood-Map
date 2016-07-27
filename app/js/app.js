@@ -154,7 +154,7 @@ function initMap() {
     ko.applyBindings(new viewModel());
 }
 
-// Create Knockout Model data from the parameters given
+// Create Knockout Model data with the parameters given
 function locationData(data, marker) {
     this.name = ko.observable(data.name);
     this.lat = ko.observable(data.lat);
@@ -168,40 +168,58 @@ function viewModel() {
     // Define self to maintain reference to original "this"
     var self = this;
 
-    // Knockout Observable objects created from the locationData function
-    self.locations = ko.observableArray([]);
+    // Store Knockout Observable objects created from the locationData function
+    this.locations = ko.observableArray([]);
 
-    $('.location-btn').click(function() {
-        // Empty objects from self.locations array
-        self.locations([]);
+    // "Observe" side-bar to animate list
+    this.animate = ko.observable('');
 
-        // Indicate currently clicked location button
-        buttonColor(this);
+    // By default, list is shown
+    this.showList = ko.observable(true);
 
-        // Remove previous markers and locations from list
+    // By default, set day button to darken
+    this.darkenDayBtn = ko.observable(true);
+
+    // Toggles show/hide List
+    this.toggleList = function() {
+        // If show list is true when clicked, then set it to false then set value of button
+        // to 'Show List' and vice versa
+        self.showList() ? self.showList(false) : self.showList(true);
+
+        // If show list is true when clicked, then animate side bar and vice versa
+        self.showList() ? self.animate('hide-list') : self.animate('show-list');
+    };
+
+    // Display locations if Day Time/Night Time Locations button is clicked
+    this.dayVsNight = function(clicked) {
+        // Remove objects from self.locations array
+        self.locations.removeAll();
+
+        // Remove previous markers
         removeMarkers();
 
-        // Display locations if Day Time/Night Time Locations button is clicked
-        if ($(this).val() === 'Night Time Locations') {
-
+        // Conditions if day/night button is pressed
+        if (clicked === "night") {
             // Pass night style theme in as argument along with night locations
             locationsDayNight(nightLocations, nightStyle);
 
+            // Lighten day button/Darken night button
+            self.darkenDayBtn(false);
+
             // Obtain Lat/Lng to pan to night locations
-            var panLatLng = new google.maps.LatLng(nightLocations[0].lat, nightLocations[0].lng);
-            map.panTo(panLatLng);
+            var nightPan = new google.maps.LatLng(nightLocations[0].lat, nightLocations[0].lng);
+            map.panTo(nightPan);
         } else {
+            // Run if day locations is clicked
             locationsDayNight(dayLocations);
+
+            // Darken day button/Lighten day Button
+            self.darkenDayBtn(true);
         }
-    });
+    };
 
     // Default locations
     locationsDayNight(dayLocations);
-
-    // Hide location list if hide list button is clicked
-    $('#list-btn').click(function() {
-        toggleList();
-    });
 
     // Display markers on map and push objects to self.locations array
     function locationsDayNight(locations, style) {
@@ -232,19 +250,20 @@ function viewModel() {
             // Push object data and newly created markers to self.locations array
             self.locations.push(new locationData(location, marker));
 
-            // Set map bound to locations
+            // Extend map bounds
             bounds.extend(myLatLng);
-            map.fitBounds(bounds);
         }
+        // Set map bound to locations
+        map.fitBounds(bounds);
         // Apply styles to map if available
         map.setOptions({ styles: style });
     }
 
     // Obtain value from filter box
-    self.filter = ko.observable('');
+    this.filter = ko.observable('');
 
     // Display filtered results dynamically to list
-    self.filteredLocations = ko.computed(function() {
+    this.filteredLocations = ko.computed(function() {
 
         // Obtain objects from self.locations array
         return ko.utils.arrayFilter(self.locations(), function(listResult) {
@@ -264,8 +283,8 @@ function viewModel() {
         });
     });
 
-    // Sets current location
-    self.currentLocation = ko.observable(self.locations()[0]);
+    // Sets current location object
+    this.currentLocation = ko.observable(this.locations()[0]);
 
     // Display Infowindow for marker when name is clicked in list view
     this.setLocation = function(clickedLocation) {
@@ -281,50 +300,22 @@ function viewModel() {
         // Obtain current marker's infowindow after clicking on name from list
         markerInfoWindow(self.currentLocation().marker, infowindow);
 
-        // Element of responsive design; If window width is less than 450px then run toggleList function to hide list
-        if ($(window).width() < 450) {
-            toggleList();
+        // Element of responsive design; If window width is <= 450px then run toggleList function to hide list
+        if ($(window).width() <= 450) {
+            self.toggleList();
         }
     };
 }
 
-// Darken location button clicked
-function buttonColor(currentClicked) {
-    // Set both day time location & night time location buttons back to default color
-    $('.location-btn').css({ 'background-color': ' #4885F5' });
-
-    // Set currently clicked button to darker color to indicate current locations
-    $(currentClicked).css({
-        'background-color': '#3F5F97',
-    });
-}
-
+// Clear markers on map
 function removeMarkers() {
-    // Clear locations from list
-    $('.list-view').empty();
-
-    // Clear markers on map
     for (var i = 0; i < placeMarkers.length; i++) {
         placeMarkers[i].setMap(null);
     }
     placeMarkers = [];
 }
 
-// Toggles List to hide or show list
-function toggleList() {
-    if ($('#list-btn').val() === 'Hide List') {
-        $('.side-bar').animate({
-            height: '175px',
-        }, 150);
-    } else {
-        $('.side-bar').animate({
-            height: '94%'
-        }, 150);
-    }
-    $('#list-btn').val($('#list-btn').val() === 'Hide List' ? 'Show List' : 'Hide List');
-}
-
-// Set marker animation off
+// Set marker animation off/ get locations details
 function markerInfoWindow(marker, infowindow) {
 
     // Set all markers animation from placeMarkers array to null to prevent multiple animated markers
@@ -341,7 +332,6 @@ function markerInfoWindow(marker, infowindow) {
     marker === infowindow.anchor ? infowindow.close() : locationDetails(marker, infowindow);
 }
 
-
 // Obtain details from locations and display infowindow
 function locationDetails(marker, infowindow) {
     var venueId = marker.id;
@@ -350,6 +340,8 @@ function locationDetails(marker, infowindow) {
     marker.setAnimation(google.maps.Animation.BOUNCE);
     // Obtain location details with Foursquare's API using Jquery's ajax method and display them in the infowindow
     $.ajax({
+        async: true,
+        cache: true,
         url: 'https://api.foursquare.com/v2/venues/' + venueId + '?client_id=' + client_ID + '&client_secret=' + client_SECRET + '&v=20160720',
         success: function(data) {
             var locationPhoto = data.response.venue.photos.groups[0].items[0].prefix + '250x160' + data.response.venue.photos.groups[0].items[1].suffix;
@@ -392,9 +384,14 @@ function locationDetails(marker, infowindow) {
             infowindow.open(map, marker);
         },
 
-        // Error handling for foursquare API
+        // Error handling for Foursquare API
         error: function() {
             alert("Sorry, unable to obtain location details. Please refresh the page and try again.");
         }
     });
+}
+
+// Error handling for Google Maps
+function googleError() {
+    alert("Sorry, Google Maps could not be loaded. Please refresh the page and try again.");
 }
