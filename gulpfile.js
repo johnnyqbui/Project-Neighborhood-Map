@@ -7,7 +7,7 @@ var gulp = require('gulp'),
 
 // Minify CSS file
 gulp.task('styles', function() {
-    return gulp.src('app/css/style.css')
+    return gulp.src('app/css/*.css')
     	.pipe(uglifycss())
     	.pipe(rename({ suffix: '.min'}))
     	.pipe(gulp.dest('dist/css/'));
@@ -25,7 +25,7 @@ gulp.task('scripts', function() {
 gulp.task('replace', function() {
 	return gulp.src('app/index.html')
 		.pipe(htmlreplace({
-			'css': 'css/style.min.css',
+			'css': ['css/style.min.css', 'css/normalize.min.css'],
 			'js': 'js/app.min.js'
 		}))
 		.pipe(gulp.dest('dist'));

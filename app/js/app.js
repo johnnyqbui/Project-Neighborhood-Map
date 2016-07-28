@@ -332,18 +332,28 @@ function markerInfoWindow(marker, infowindow) {
     marker === infowindow.anchor ? infowindow.close() : locationDetails(marker, infowindow);
 }
 
+
 // Obtain details from locations and display infowindow
 function locationDetails(marker, infowindow) {
     var venueId = marker.id;
     var client_ID = '5QH5BQKIHD5AYO0YDHZZOA0JI10K5F5OAORSBWZXJX5KPAIG';
     var client_SECRET = 'IDJ0GEAFC25OXFVFHB12HNFHKAHNGDZPMGTLTTOBL3PN3AWI';
     marker.setAnimation(google.maps.Animation.BOUNCE);
-    // Obtain location details with Foursquare's API using Jquery's ajax method and display them in the infowindow
-    $.ajax({
+
+    // Open info window first
+    infowindow.open(map, marker);
+
+    // Obtain location details with Foursquare's API using Jquery's ajax
+    // request method, then display data to infowindow after ajax request is complete
+    $.when($.ajax({
         async: true,
         cache: true,
         url: 'https://api.foursquare.com/v2/venues/' + venueId + '?client_id=' + client_ID + '&client_secret=' + client_SECRET + '&v=20160720',
-        success: function(data) {
+        // Error handling for Foursquare API
+        error: function() {
+            alert("Sorry, unable to obtain location details. Please refresh the page and try again.");
+        }
+    })).done(function(data) {
             var locationPhoto = data.response.venue.photos.groups[0].items[0].prefix + '250x160' + data.response.venue.photos.groups[0].items[1].suffix;
             var locationName = marker.title;
             var locationAddress = data.response.venue.location.formattedAddress;
@@ -351,44 +361,38 @@ function locationDetails(marker, infowindow) {
             var locationHours = data.response.venue.hours;
             var locationRating = data.response.venue.rating;
             var locationHereNow = data.response.venue.hereNow.summary;
-            var infowWindowContent = '<div">';
+            var infoWindowContent = '<div">';
             if (locationPhoto) {
-                infowWindowContent += '<img src="' + locationPhoto + '">';
-                infowWindowContent += '<br><strong>' + locationName + '</strong>';
+                infoWindowContent += '<img src="' + locationPhoto + '">';
+                infoWindowContent += '<br><strong>' + locationName + '</strong>';
             }
 
             if (locationAddress) {
-                infowWindowContent += '<br>' + locationAddress[0] + '<br>' + locationAddress[1];
+                infoWindowContent += '<br>' + locationAddress[0] + '<br>' + locationAddress[1];
             }
 
             if (locationPhoneNumber) {
-                infowWindowContent += '<br>' + locationPhoneNumber;
+                infoWindowContent += '<br>' + locationPhoneNumber;
             }
 
             if (locationHours) {
-                infowWindowContent += '<br>' + locationHours.status;
+                infoWindowContent += '<br>' + locationHours.status;
             }
 
             if (locationRating) {
-                infowWindowContent += '<br><br>' + 'Rating: ' + locationRating;
+                infoWindowContent += '<br><br>' + 'Rating: ' + locationRating;
             }
 
             if (locationHereNow) {
-                infowWindowContent += "<br>" + locationHereNow;
+                infoWindowContent += "<br>" + locationHereNow;
             }
 
-            infowWindowContent += '<br><br><i>Data Source: <a href="https://foursquare.com/">Foursquare</a></i></div>';
-            infowindow.setContent(infowWindowContent);
+            infoWindowContent += '<br><br><i>Data Source: <a href="https://foursquare.com/">Foursquare</a></i></div>';
 
-            // After creating infowindow content, open it.
-            infowindow.open(map, marker);
-        },
-
-        // Error handling for Foursquare API
-        error: function() {
-            alert("Sorry, unable to obtain location details. Please refresh the page and try again.");
+            // Set content to info window
+            infowindow.setContent(infoWindowContent);
         }
-    });
+    );
 }
 
 // Error handling for Google Maps
